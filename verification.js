@@ -273,13 +273,12 @@ function showLotadoModal() {
         <div class="users-icon">
           <i class="fas fa-users"></i>
         </div>
-        <h3>Vagas Esgotadas</h3>
-        <p class="lotado-subtitle">Todas as vagas para esta promoção foram preenchidas</p>
+        <h3>Código Inválido!</h3>
+        <p class="lotado-subtitle">Seu código está inválido ou foi expirado.</p>
       </div>
       <div class="modal-body">
         <p style="text-align: center; margin-bottom: 20px; color: #495057; line-height: 1.5;">
-          Infelizmente, todas as vagas disponíveis para esta promoção já foram ocupadas. 
-          Tente novamente mais tarde ou aguarde uma nova promoção.
+          Refaça o cadastro em 2 minutos.
         </p>
       </div>
       <div class="modal-footer">
