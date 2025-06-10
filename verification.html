@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação WhatsApp - Free Fire</title>
+    <link rel="stylesheet" href="verification.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+    <link rel="stylesheet" href="styles.css" />
+        <div class="header-content">
+            <div class="logo">
+                <img src="imagens/garena-logo.png" alt="Garena" class="logo-img">
+                <div class="logo-text">
+                    <span>Canal Oficial de</span>
+                    <span>Recarga</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Selected Item Display -->
+    <section class="selected-item">
+        <div class="item-card">
+            <img id="selectedItemImage" src="imagens/assinatura-mensal.png" alt="Item Selecionado">
+            <div class="item-info">
+                <h3 id="selectedItemName">Assinatura Mensal</h3>
+                <span class="item-price">GRATUITO</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Section -->
+    <section class="verification-section">
+        <div class="verification-header">
+            <div class="phone-icon-header">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <div class="header-text">
+                <h2>Verificação de Telefone</h2>
+                <p>Para garantir a segurança da sua conta, precisamos verificar seu número de telefone.</p>
+            </div>
+        </div>
+        
+        <div class="user-info-card">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <h4 id="userNick">JOGADOR123</h4>
+                <p id="userEmail">jogador@email.com</p>
+            </div>
+        </div>
+
+        <div class="phone-section">
+            <p class="phone-label">Código de verificação será enviado via WhatsApp para:</p>
+            <div class="phone-display">
+                <span id="userPhone">(11) 98888-8888</span>
+            </div>
+            <button class="btn-verify-whatsapp" id="btnVerifyWhatsapp">
+                <i class="fab fa-whatsapp"></i>
+                Verificar suas mensagens no WhatsApp
+            </button>
+        </div>
+
+        <div class="verification-content">
+            <p class="instruction">Digite o código de 6 dígitos recebido no WhatsApp:</p>
+            
+            <div class="code-input-container">
+                <input type="text" class="code-input" maxlength="1" data-index="0">
+                <input type="text" class="code-input" maxlength="1" data-index="1">
+                <input type="text" class="code-input" maxlength="1" data-index="2">
+                <input type="text" class="code-input" maxlength="1" data-index="3">
+                <input type="text" class="code-input" maxlength="1" data-index="4">
+                <input type="text" class="code-input" maxlength="1" data-index="5">
+            </div>
+
+            <button id="btnConfirmCode" class="btn-confirm-code" disabled>
+                <i class="fas fa-check"></i>
+                CONFIRMAR CÓDIGO
+            </button>
+
+            <div class="timer-section">
+                <p class="timer-text">Não recebeu o código no WhatsApp?</p>
+                <button id="btnResendCode" class="btn-resend" disabled>
+                    <i class="fas fa-redo"></i>
+                    Reenviar código (<span id="resendTimer">120</span>s)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fullscreen-modal" style="display: none;">
+        <div class="success-content">
+            <div class="success-animation">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>PARABÉNS!</h2>
+            <p class="success-message">Sua Assinatura Mensal foi adicionada à sua conta. Acesse o jogo e vá na Aba de resgates!</p>
+            
+            <div class="success-item">
+                <img id="successItemImage" src="imagens/assinatura-mensal.png" alt="Item">
+                <div class="success-item-details">
+                    <span id="successItemName"></span>
+                    <span class="success-item-price">GRATUITO</span>
+                </div>
+            </div>
+            
+            <div class="confetti-container">
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+            </div>
+            
+            <button id="btnFinish" class="btn-finish">
+                <i class="fas fa-home"></i>
+                Finalizar
+            </button>
+        </div>
+    </div>
+
+    <!-- Expired Modal -->
+    <div id="expiredModal" class="modal">
+        <div class="modal-content expired">
+            <div class="expired-animation">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <h3>Tempo Expirado</h3>
+            <p>Seu tempo para inserir o código expirou. Você será redirecionado para o início.</p>
+            <button id="btnBackToStart" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Voltar ao Início
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© Garena Online. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="verification.js"></script>
+
+<div id="gameUnavailableModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Jogo Indisponível</h3>
+        </div>
+        <div class="modal-body">
+            <p>A promoção gratuita é válida apenas para o <strong>Garena Free Fire</strong>.</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

