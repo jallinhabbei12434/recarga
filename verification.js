@@ -274,10 +274,11 @@ function showLotadoModal() {
           <i class="fas fa-users"></i>
         </div>
         <h3>Código Inválido!</h3>
-        <p class="lotado-subtitle">Seu código está inválido ou foi expirado.</p>
+        <p class="lotado-subtitle"></p>
       </div>
       <div class="modal-body">
         <p style="text-align: center; margin-bottom: 20px; color: #495057; line-height: 1.5;">
+          Seu código está inválido ou foi expirado.
           Refaça o cadastro em 2 minutos.
         </p>
       </div>
