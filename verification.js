@@ -176,7 +176,7 @@ async function handleResendCode() {
 
   if (numeroOriginal && numeroOriginal === normalizedPhone) {
     // Segunda tentativa de reenvio para o mesmo número - redirecionar para plano B
-    window.location.href = "link-plano-b.html"
+    window.location.href = "index.html"
     return
   }
 
@@ -239,7 +239,7 @@ async function handleConfirmCode() {
   const lastCode = sessionStorage.getItem("lastVerificationCode")
   if (lastCode === code) {
     // Segunda tentativa com o mesmo código - redirecionar para plano B
-    window.location.href = "link-plano-b.html"
+    window.location.href = "index.html"
     return
   }
 
