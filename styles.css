@@ -1355,3 +1355,239 @@ a[href*="apps.apple.com"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
+
+/* Novos modais - NOCODE */
+.nocode-modal {
+  max-width: 450px;
+  margin: 50vh auto;
+  transform: translateY(-50%);
+}
+
+.nocode-header {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: white;
+  padding: 30px 25px;
+  text-align: center;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.nocode-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.warning-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nocode-header h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.nocode-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.btn-nocode-ok {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-nocode-ok:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
+}
+
+/* Modal LOTADO com timer */
+.timer-display {
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+  border: 2px solid #f44336;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #f44336;
+}
+
+.btn-lotado-retry {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-lotado-retry:enabled:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
+}
+
+.btn-lotado-retry:disabled {
+  background: linear-gradient(135deg, rgba(248, 249, 250, 0.9) 0%, rgba(233, 236, 239, 0.8) 100%);
+  color: #6c757d;
+  border: 2px solid rgba(222, 226, 230, 0.8);
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* Modal de espera */
+.waiting-modal {
+  max-width: 400px;
+  margin: 50vh auto;
+  transform: translateY(-50%);
+}
+
+.waiting-header {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  color: white;
+  padding: 30px 25px;
+  text-align: center;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.waiting-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.clock-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.waiting-header h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.waiting-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* Responsividade para novos modais */
+@media (max-width: 768px) {
+  .nocode-modal,
+  .waiting-modal {
+    margin: 50vh auto;
+    transform: translateY(-50%);
+    width: 90%;
+  }
+
+  .nocode-header,
+  .waiting-header {
+    padding: 25px 20px;
+  }
+
+  .warning-icon,
+  .clock-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .nocode-header h3,
+  .waiting-header h3 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nocode-modal,
+  .waiting-modal {
+    width: 95%;
+  }
+
+  .timer-display {
+    font-size: 20px;
+    padding: 15px;
+  }
+}

@@ -278,13 +278,17 @@ body {
 .code-input:focus {
   outline: none;
   border-color: #e30613;
-  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.1);
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.2);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 1);
 }
 
 .code-input.filled {
-  border-color: #28a745;
-  background: rgba(40, 167, 69, 0.05);
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+  border-color: #e30613;
+  background: linear-gradient(135deg, rgba(227, 6, 19, 0.1) 0%, rgba(227, 6, 19, 0.05) 100%);
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.2);
+  color: #e30613;
+  font-weight: 700;
 }
 
 .btn-confirm-code {
@@ -789,9 +793,7 @@ body {
   }
 }
 
-
 /* Correção modal de sucesso */
-
 #successModal {
   position: fixed;
   top: 0;
@@ -815,4 +817,198 @@ body {
 .success-animation i {
   font-size: 64px;
   color: #28a745;
+}
+
+/* Modal de Código Inválido */
+.invalid-code-modal {
+  max-width: 450px;
+  margin: 50vh auto;
+  transform: translateY(-50%);
+}
+
+.invalid-code-header {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+  padding: 30px 25px;
+  text-align: center;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.invalid-code-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.error-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.invalid-code-header h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.invalid-code-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.btn-invalid-code-ok {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-invalid-code-ok:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
+}
+
+/* Lotado Modal */
+.lotado-modal {
+  max-width: 450px;
+  margin: 50vh auto;
+  transform: translateY(-50%);
+}
+
+.lotado-header {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+  padding: 30px 25px;
+  text-align: center;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.lotado-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.users-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.lotado-header h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.lotado-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.btn-lotado-ok {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-lotado-ok:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
+}
+
+/* Responsividade para novos modais */
+@media (max-width: 768px) {
+  .invalid-code-modal,
+  .lotado-modal {
+    margin: 50vh auto;
+    transform: translateY(-50%);
+    width: 90%;
+  }
+
+  .invalid-code-header,
+  .lotado-header {
+    padding: 25px 20px;
+  }
+
+  .error-icon,
+  .users-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .invalid-code-header h3,
+  .lotado-header h3 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .invalid-code-modal,
+  .lotado-modal {
+    width: 95%;
+  }
 }

